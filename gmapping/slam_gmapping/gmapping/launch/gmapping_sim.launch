@@ -1,0 +1,60 @@
+<launch>
+
+  <param name="use_sim_time" value="true"/>
+  <arg name="scan_topic" default="sick_scan" />
+
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+
+    <remap from="scan" to="$(arg scan_topic)"/>
+
+    <!--  GMapping Wrapper参数 -->
+    <param name="throttle_scans" value="1"/>
+    <param name="base_frame" value="base_link" />
+    <param name="odom_frame" value="odom"/>--
+    <param name="map_update_interval" value="5.0"/>                   <!--  地图更新速率  -->
+
+
+<!-- Set maxUrange < actual maximum range of the Laser <=maxRange -->
+    <!-- maxUrange < actual-->     
+    <!-- Laser Parameters(雷达相关参数) -->
+    <param name="maxRange" value="5.51" />                             <!-- 激光最大范围 -->
+    <param name="maxUrange" value="5.5"/>                             <!-- 激光最大使用范围 maxUrange < 真实范围 < maxRange-->
+    <param name="sigma" value="0.05"/>                                <!-- scan matching过程中的标准差(cell) -->
+    <param name="kernelSize" value="1"/>                              <!-- scan matching过程中的搜索窗口大小 -->
+    <param name="lstep" value="0.05"/>                                <!-- scan matching过程中的位置增量 -->
+    <param name="astep" value="0.05"/>                                <!-- scan matching过程中的角度增量 -->
+    <param name="iterations" value="5"/>                              <!-- scan matching过程中的迭代优化次数 -->
+    <param name="lsigma" value="0.075"/>                              <!-- scan matching过程中的计算似然的标准差(single laser beam) -->
+    <param name="ogain" value="3.0"/>                                 <!-- 平滑似然的增益 -->
+    <param name="lskip" value="0"/>                                   <!-- 取每第(n+1)个激光束来计算匹配(0表示取所有的激光束) -->
+    <param name="minimumScore" value="50"/>                           <!-- scan matching被接受的最小阈值(不被接受，则使用里程计数据) -->
+
+    <!-- 小车运动模型参数 -->
+    <param name="srr" value="0.01"/>                                  <!-- 由平移造成的平移误差-->
+    <param name="srt" value="0.005"/>                                  <!-- 由平移造成的角度误差-->
+    <param name="str" value="0.01"/>        	                          <!-- 由旋转造成的平移误差 -->
+    <param name="stt" value="0.005"/>                                  <!-- 由旋转造成的角度误差 -->
+
+
+    <!-- 其他参数 -->
+    <param name="linearUpdate" value="0.2"/>                            <!-- 小车每走过0.2m,处理一次激光数据 -->
+    <param name="angularUpdate" value="0.2"/>                           <!-- 小车旋转0.2 / 12度，处理一次激光数据 -->
+    <param name="temporalUpdate" value="5"/>                            <!-- 小车保持不动的情况下，处理一次激光数据的时间间隔-->
+    <param name="resampleThreshold" value="0.5"/>                       <!-- 有效粒子数阈值 -->
+    <param name="particles" value="30"/>                               <!-- 粒子滤波器的粒子数 -->
+
+    <!-- 似然采样(Likelihood sampling:used in scan matching) -->
+    <param name="llsamplerange" value="0.02"/>                          <!-- 线性采样范围 -->
+    <param name="llsamplestep" value="0.02"/>                           <!-- 线性采样步长 -->
+    <param name="lasamplerange" value="0.005"/>                         <!-- 角度采样范围 -->
+    <param name="lasamplestep" value="0.005"/>                          <!-- 角度采样步长 -->
+
+    <!-- 地图维度和分辨率 -->
+    <param name="xmin" value="-1.0"/>                                   <!-- X轴最小值-->
+    <param name="ymin" value="-1.0"/>                                   <!-- Y轴最小值-->
+    <param name="xmax" value="1.0"/>                                    <!-- X轴最大值-->
+    <param name="ymax" value="1.0"/>                                    <!-- Y轴最大值-->
+    <param name="delta" value="0.025"/>                                  <!-- 地图分辨率-->
+
+  </node>
+</launch>

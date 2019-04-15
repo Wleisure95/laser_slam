@@ -26,7 +26,7 @@
 
       ![1554776817122](README.assets/1554776817122.png)
 
-      蓝色为里程计得到的路径，红色为激光（以里程计为迭代初始值）icp匹配的路径，黄色为最小二乘矫正的路径。
+      蓝色为里程计得到的路径，红色为激光（以里程计为迭代初始值）icp匹配的路径，黄色为最小二乘矫正的路径。(确实黄色路径更准确)
 
 ## 代码解读
 
@@ -64,7 +64,7 @@ void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
     last_pos = now_pos;
 
     //记录下里程计的增量数据
-    odom_increments.push_back(d_point_odom);
+    odom_increments.push_back(d更准确_point_odom);
 
 
     //把当前的激光数据转换为 pl-icp能识别的数据 & 进行矫正
@@ -112,7 +112,7 @@ void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
 
 ###PIICP匹配函数
 
-​	在PIICPBetweenTwoFrames函数里利用csm库里的sm_icp函数算得帧间的r和t（以里程计得到的帧间r和t作为迭代初始值），scan匹配优化得到激光里程计。最小二乘的原理解释可以记一下。
+​	在PIICPBetweenTwoFrames函数里利用==csm库里的sm_icp函数==算得帧间的r和t（以里程计得到的帧间r和t作为迭代初始值），scan匹配优化得到激光里程计（原理在gmapping文件夹下第四课的pdf）。最小二乘的原理解释可以记一下。
 
 ```c
 //求两帧之间的icp位姿匹配

@@ -1,0 +1,40 @@
+This is a fork from gmapping at https://openslam.informatik.uni-freiburg.de/data/svn/gmapping/trunk/
+It includes a few patches that could be pushed upstream if needed
+
+
+
+
+-----------GMapping开发文档------------
+2017-03-31 ～ 2017-04-01
+1.把gmapping算法过程中的运动学更新(motion model draw)、scan-match、resample都用OpenMP修改成为并行模式。
+2.删除了在registerScan()函数前必须调用computeActiveArea()函数的操作。直接在registerScan()函数的开头直接调用computeActiveArea()。
+3.修改了Particle的结构体和构造函数 在里面加入了一个低分辨率的地图。为加入CSM做准备
+
+
+2017-04-08
+今天把GMapping中的scan-match部分由前面的梯度下降替换为了IcpOptimization()，效果还有待测试
+理论上来说替换成ICP是一个比前面的拟梯度下降更合理的选择
+
+2017-04-10
+替换成ICP之后，效果变得更差了，不知道为什么.所以暂时还是换回GMapping自带的hill-climb的优化形式
+
+2017-05-06
+去掉了03-31~04~01的用低分辨率地图来进行CSM的方式
+仿照karto的方式来进行CSM，维护一个running_scans。需要的时候从这里面生成localmap来进行CSM的匹配。
+目前只是把代码修改完毕了，还没有进行实验
+
+2017-05-08
+在代码中加入了isChampionLaser这个参数，用来选择消息数据类型。
+如果isChampionLaser这个设置为true,那么说明选择的激光数据格式为我们自己定义的ChampionNavLaserScan模式
+这个提升效果不仅仅是在gmapping里面可以提升，在任何的SLAM算法里面都可以提升。
+因为我们通过运动畸变矫正，极大的去除了机器人的运动畸变。提高了低成本激光雷达的畸变效果。
+
+2017-05-10
+通过实验得知，在同样使用rplidar a2的情况下，使用经过矫正的ChampionNavLaserScan建出来的办公室的地图，
+明显比rplidar原本使用的ROS自带的消息类型格式构建出来的地图要好很多。但是并没有好太多。
+
+下一步的优化准确在激光数据中提取直线，然后把这些直线上的激光点通过线性插值重新排列，以此来去除激光点的噪声造成的建图出来的墙壁比较厚的缺点。
+
+
+
+
