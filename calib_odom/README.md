@@ -64,7 +64,7 @@ void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
     last_pos = now_pos;
 
     //记录下里程计的增量数据
-    odom_increments.push_back(d更准确_point_odom);
+    odom_increments.push_back(d_point_odom);
 
 
     //把当前的激光数据转换为 pl-icp能识别的数据 & 进行矫正
