@@ -30,9 +30,9 @@
 
 ## 代码解读
 
-​	学会用csm库的icp接口制作一个激光里程计。
+​	学会用csm库的icp接口制作一个激光里程计。(编译前安装sudo apt-get install ros-kinetic-csm)
 
-###激光回调函数入口
+### 激光回调函数入口
 
 ```c
 void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
@@ -110,7 +110,7 @@ void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
 }
 ```
 
-###PIICP匹配函数
+### PIICP匹配函数
 
 ​	在PIICPBetweenTwoFrames函数里利用==csm库里的sm_icp函数==算得帧间的r和t（以里程计得到的帧间r和t作为迭代初始值），scan匹配优化得到激光里程计（原理在gmapping文件夹下第四课的pdf）。最小二乘的原理解释可以记一下。
 
@@ -176,7 +176,7 @@ Eigen::Vector3d  Scan2::PIICPBetweenTwoFrames(LDP& currentLDPScan,
 }
 ```
 
-###构造最小二乘的方程
+### 构造最小二乘的方程
 
 ​	将3×3的，包含9个待求变量，变成1×9的向量x，构建Ax=b的最小二乘方程。
 
@@ -194,7 +194,7 @@ Ax = b
 bool OdomCalib::Add_Data(Eigen::Vector3d Odom,Eigen::Vector3d scan)
 {
 
-    if(now_len<INT_MAX)
+    if(now_len<INT_MAX)sudo apt-get install ros-kine
     {
         //TODO: 构建超定方程组
         A(now_len%data_len*3,0)=Odom(0);
@@ -222,6 +222,6 @@ bool OdomCalib::Add_Data(Eigen::Vector3d Odom,Eigen::Vector3d scan)
 }
 ```
 
-###最小二乘公式理解
+### 最小二乘公式理解
 
 ![1554777572171](README.assets/1554777572171.png)
